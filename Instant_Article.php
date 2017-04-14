@@ -1,56 +1,35 @@
 <?php
 class Instant_Article
 {
-    protected $url;
     protected $page_access_token;
 
-    public function loadURL($url)
-    {
-        $this->url = $url;
-    }
-
+    /*
+    * Set Page Access Token (required)
+    *
+    */
     public function pageAccessToken($token)
     {
         $this->page_access_token = $token;
     }
 
-    public function get_ID()
+    /*
+    * Get article data
+    *
+    */
+    public function get_article($url)
     {
-        if( !isset($this->url) || !isset($this->page_access_token) ) :
-            echo "ERROR: URL and Page Access Token not set";
-            return; 
-        endif;
-
-        $curl = $this->cURL("https://graph.facebook.com?id={$this->url}&fields=instant_article&access_token={$this->page_access_token}");
-
-        if( $this->has_errors($curl) || !isset($curl->instant_article->id) ) :
-            return false;
-        endif;
-        return $curl->instant_article->id;
+        $curl = $this->cURL("https://graph.facebook.com?id={$url}&fields=instant_article&access_token={$this->page_access_token}");
+        return $curl;
     }
 
-    public function has_errors($response)
-    {
-        if(isset($response->error)) :
-            return true;
-        else :
-            return false;
-        endif;
-    }
-
-    public function get_HTML()
-    {   
-        $id = $this->get_ID();
-        if( $id ) :
-            $curl = $this->cURL("https://graph.facebook.com/{$id}?access_token={$this->page_access_token}");
-            return $curl->html_source;
-        endif;
-    }
-
+    /*
+    * Create article
+    *
+    */
     public function create_article($fields)
     {
-        if( !isset($this->url) || !isset($this->page_access_token) ) :
-            echo "ERROR: URL, Page ID, and/or Page Access Token not set";
+        if( !isset($this->page_access_token) ) :
+            echo "ERROR: Page Access Token not set";
             return false; 
         endif;
 
@@ -69,7 +48,10 @@ class Instant_Article
         print_r($response);
     }
 
-    //cURL requests
+    /*
+    * Process cURL requests
+    *
+    */
     public function cURL($url, $options = NULL)
     {
         $ch = curl_init($url); 
@@ -84,6 +66,11 @@ class Instant_Article
         $response = curl_exec($ch);
         curl_close($ch);
         $response = json_decode($response);
+
+        if( isset($response->error) ) :
+            return $response->error->message;
+        endif;
+
         return $response;
     }
 }
