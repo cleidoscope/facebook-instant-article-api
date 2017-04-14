@@ -14,9 +14,9 @@ $article->loadURL("XXX");
 
 $fields = [
 	'page_id' => 'XXX', //Page ID
-  'html_source' => 'XXX', //HTML code
-  'published' => false, //defaults to FALSE
-  'development_mode' => true, //defaults to TRUE
+  	'html_source' => 'XXX', //HTML code
+  	'published' => false, //defaults to FALSE
+  	'development_mode' => true, //defaults to TRUE
 ];
 
 $article->create_article($fields);
