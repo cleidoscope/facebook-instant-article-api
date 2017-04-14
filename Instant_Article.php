@@ -21,7 +21,7 @@ class Instant_Article
             return; 
         endif;
 
-        $curl = $this->cURL("https://graph.facebook.com?id=$this->url&fields=instant_article&access_token=$this->page_access_token");
+        $curl = $this->cURL("https://graph.facebook.com?id={$this->url}&fields=instant_article&access_token={$this->page_access_token}");
 
         if( $this->has_errors($curl) || !isset($curl->instant_article->id) ) :
             return false;
