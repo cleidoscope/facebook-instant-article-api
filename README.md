@@ -6,11 +6,9 @@ Sample:
 <?php
 require_once __DIR__ . '/autoload.php';
 
-
 $article = new Instant_Article();
 $article->pageAccessToken("XXX");
 $article->loadURL("XXX");
-
 
 $fields = [
 	'page_id' => 'XXX', //Page ID
