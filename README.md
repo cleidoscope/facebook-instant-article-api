@@ -2,7 +2,7 @@
 Manage your Facebook Instant Article using API
 
 Sample:
-
+```php
 <?php
 require_once __DIR__ . '/autoload.php';
 
@@ -21,3 +21,4 @@ $fields = [
 
 $article->create_article($fields);
 ?>
+```
