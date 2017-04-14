@@ -1,7 +1,6 @@
 <?php
 class Instant_Article
 {
-
     protected $url;
     protected $page_access_token;
 
@@ -30,8 +29,6 @@ class Instant_Article
         return $curl->instant_article->id;
     }
 
-
-
     public function has_errors($response)
     {
         if(isset($response->error)) :
@@ -45,7 +42,7 @@ class Instant_Article
     {   
         $id = $this->get_ID();
         if( $id ) :
-            $curl = $this->cURL("https://graph.facebook.com/".$id."?access_token=".$this->page_access_token);
+            $curl = $this->cURL("https://graph.facebook.com/{$id}?access_token={$this->page_access_token}");
             return $curl->html_source;
         endif;
     }
