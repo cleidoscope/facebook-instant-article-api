@@ -1,5 +1,5 @@
 # facebook-instant-article-api
-Manage your Facebook Instant Article using API
+Manage your Facebook Instant Articles using API
 
 Sample:
 ```php
