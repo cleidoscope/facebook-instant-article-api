@@ -6,7 +6,7 @@ Example:
 <?php
 require_once __DIR__ . '/autoload.php';
 
-$page_access_token = "XXXXX"; //Required for all requests
+$page_access_token = "XXXXX"; // Required for all requests
 
 $url = "XXXXX"; // Required for Get and Delete Article methods
 
