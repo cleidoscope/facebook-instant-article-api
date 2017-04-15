@@ -1,40 +1,58 @@
 <?php
 class Instant_Article
 {
-    protected $page_access_token;
 
     /*
-    * Set Page Access Token (required)
+    * Get Article
     *
     */
-    public function pageAccessToken($token)
+    public static function getArticle($url, $page_access_token)
     {
-        $this->page_access_token = $token;
+        $curl = self::cURL("https://graph.facebook.com?id={$url}&fields=instant_article&access_token={$page_access_token}");
+
+
+        if( isset($curl->instant_article) ) :
+            $response = $curl->instant_article;
+        else :
+            $response = isset($curl->id) ? "Article does not exist" : $curl;
+            print_r($response);
+        endif;
+
+        return $response;
     }
 
     /*
-    * Get article data
+    * Delete Article
     *
     */
-    public function get_article($url)
+    public static function deleteArticle($url, $page_access_token)
     {
-        $curl = $this->cURL("https://graph.facebook.com?id={$url}&fields=instant_article&access_token={$this->page_access_token}");
+        $article = self::cURL("https://graph.facebook.com?id={$url}&fields=instant_article&access_token={$page_access_token}");
+
+        if( !isset($article->instant_article) ) :
+            $response = isset($article->id) ? "Article does not exist" : $article;
+            print_r($response);
+            return $response;
+        endif;
+
+        $options = [
+            CURLOPT_CUSTOMREQUEST => "DELETE",
+        ];
+
+        $curl = self::cURL("https://graph.facebook.com/{$article->instant_article->id}?access_token={$page_access_token}", $options);
+        print_r($curl);
         return $curl;
     }
 
+
     /*
-    * Create article
+    * Create/Update Article
     *
     */
-    public function create_article($fields)
+    public static function createArticle($fields, $page_access_token)
     {
-        if( !isset($this->page_access_token) ) :
-            echo "ERROR: Page Access Token not set";
-            return false; 
-        endif;
-
         $post_fields = [
-                'access_token' => $this->page_access_token,
+                'access_token' => $page_access_token,
                 'html_source' => $fields['html_source'],
                 'published' => isset($fields['published']) ? $fields['published'] : false,
                 'development_mode' => isset($fields['development_mode']) ? $fields['development_mode'] : true,
@@ -44,15 +62,19 @@ class Instant_Article
             CURLOPT_POST => true,
             CURLOPT_POSTFIELDS => http_build_query($post_fields),
         ];
-        $response = $this->cURL("https://graph.facebook.com/{$fields['page_id']}/instant_articles", $options); 
-        print_r($response);
+
+        $curl = self::cURL("https://graph.facebook.com/{$fields['page_id']}/instant_articles", $options); 
+
+        print_r($curl);
+        return $curl;
     }
 
+
     /*
-    * Process cURL requests
+    * Process cURL Requests
     *
     */
-    public function cURL($url, $options = NULL)
+    public static function cURL($url, $options = NULL)
     {
         $ch = curl_init($url); 
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
